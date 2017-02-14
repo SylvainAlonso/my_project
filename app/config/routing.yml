@@ -1,0 +1,8 @@
+recipe:
+    resource: "@RecipeBundle/Controller/"
+    type:     annotation
+    prefix:   /note
+
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
