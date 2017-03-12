@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+      <title>Nouvelle catégorie</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css')}}"/>
+      {%form_theme form 'bootstrap_3_layout.html.twig'%}
+    </head>
+    <body>
+      <div class="container">
+        <h1>Nouvelle note</h1>
+        <div>
+            {{ form(form) }}
+        </div>
+      </div>
+    </body>
+</html>

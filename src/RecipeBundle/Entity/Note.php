@@ -1,9 +1,8 @@
 <?php
-
 namespace RecipeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use RecipeBundle\Entity\Categorie;
 /**
  * Note
  *
@@ -20,14 +19,12 @@ class Note
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
     /**
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
      */
     private $title;
-
     /**
      * @var string
      *
@@ -35,6 +32,19 @@ class Note
      */
     private $content;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="datetime")
+     */
+    private $date;
+
+    /**
+     * Many Notes have One Categorie.
+     * @ORM\ManyToOne(targetEntity="RecipeBundle\Entity\Categorie", inversedBy="note")
+     * @ORM\JoinColumn(name="Categorie_id", referencedColumnName="id")
+     */
+    private $categorie;
 
     /**
      * Get id
@@ -45,7 +55,6 @@ class Note
     {
         return $this->id;
     }
-
     /**
      * Set title
      *
@@ -56,10 +65,8 @@ class Note
     public function setTitle($title)
     {
         $this->title = $title;
-
         return $this;
     }
-
     /**
      * Get title
      *
@@ -69,7 +76,6 @@ class Note
     {
         return $this->title;
     }
-
     /**
      * Set content
      *
@@ -80,10 +86,8 @@ class Note
     public function setContent($content)
     {
         $this->content = $content;
-
         return $this;
     }
-
     /**
      * Get content
      *
@@ -93,5 +97,49 @@ class Note
     {
         return $this->content;
     }
-}
 
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     *
+     * @return note
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+        return $this;
+    }
+    /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+    
+    /**
+     * Set categorie
+     *
+     * @param \RecipeBundle\Entity\Categorie $categorie
+     *
+     * @return Note
+     */
+    public function setCategorie(\RecipeBundle\Entity\Categorie $categorie = null)
+    {
+        $this->categorie = $categorie;
+        return $this;
+    }
+
+    /**
+     * Get categorie
+     *
+     * @return \RecipeBundle\Entity\Categorie
+     */
+    public function getCategorie()
+    {
+        return $this->categorie;
+    }
+}

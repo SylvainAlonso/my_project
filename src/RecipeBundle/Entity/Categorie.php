@@ -3,6 +3,7 @@
 namespace RecipeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use RecipeBundle\Entity\Note;
 
 /**
  * Categorie
@@ -24,10 +25,15 @@ class Categorie
     /**
      * @var string
      *
-     * @ORM\Column(name="wording", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255)
      */
-    private $wording;
+    private $name;
 
+    /**
+     * One Categorie has Many Notes.
+     * @ORM\OneToMany(targetEntity="RecipeBundle\Entity\Note", mappedBy="categorie")
+     */
+    private $note;
 
     /**
      * Get id
@@ -40,27 +46,60 @@ class Categorie
     }
 
     /**
-     * Set wording
+     * Set name
      *
-     * @param string $wording
+     * @param string $name
      *
      * @return Categorie
      */
-    public function setWording($wording)
+    public function setName($name)
     {
-        $this->wording = $wording;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get wording
+     * Get name
      *
      * @return string
      */
-    public function getWording()
+    public function getName()
     {
-        return $this->wording;
+        return $this->name;
+    }
+
+    /**
+     * Add note
+     *
+     * @param \RecipeBundle\Entity\Note $note
+     *
+     * @return Categorie
+     */
+    public function addNote(\RecipeBundle\Entity\Note $note)
+    {
+        $this->note[] = $note;
+
+        return $this;
+    }
+
+    /**
+     * Remove note
+     *
+     * @param \RecipeBundle\Entity\Note $note
+     */
+    public function removeNote(\RecipeBundle\Entity\Note $note)
+    {
+        $this->note->removeElement($note);
+    }
+
+    /**
+     * Get note
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNote()
+    {
+        return $this->note;
     }
 }
-

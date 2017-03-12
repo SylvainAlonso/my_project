@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css')}}"/>
+      {% for flashMessage in app.session.flashBag.get('notice') %}
+        <div class="alert alert-success">
+          {{flashMessage}}
+        </div>
+      {% endfor %}
+    </head>
+    <body>
+
+      <div class="container">
+      <h2>Liste des notes</h2>
+      {% for note in notes %}
+        <div >
+          <b>{{note.title}}</b><br>
+          <i>{{note.categorie.name}}</i> -
+          {{note.date|date('d/m/Y')}}
+          <div class="well well-lg">
+            {{note.content}}
+          </div>
+        </div>
+      {% endfor %}
+      <a href="{{ path('new_note') }}">
+        <button type="button" class="btn btn-default">Nouvelle note</button>
+      </a>
+      <a href="{{ path('check_categories') }}">
+        <button type="button" class="btn btn-default">Catégories</button>
+      </a>
+      <script src="{{ asset('bootstrap/js/jquery-3.1.1.js') }}"></script>
+      <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+    </div>
+  </body>
+</html>

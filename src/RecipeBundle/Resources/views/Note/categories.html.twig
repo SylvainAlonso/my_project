@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css')}}"/>
+      {% for flashMessage in app.session.flashBag.get('notice') %}
+        <div class="alert alert-success">
+          {{flashMessage}}
+        </div>
+      {% endfor %}
+    </head>
+    <body>
+
+    <div class="container">
+      <h2>Liste des catégories</h2>
+      <div class="row">
+        <div class="col-xs-12 col-sm-9 col-md-9 col-lg-1">
+          <h4>ID</h4>
+        </div>
+        <div class="col-xs-12 col-sm-9 col-md-9 col-lg-4">
+          <h4>Nom</h4>
+        </div>
+      </div>
+      {% for categorie in categories %}
+        <div class="row">
+          <legend>
+            <div class="col-xs-12 col-sm-9 col-md-9 col-lg-1" style="color:#A9A9A9">
+              {{categorie.id}}
+            </div>
+            <div class="col-xs-12 col-sm-9 col-md-9 col-lg-4" style="color:#A9A9A9">
+              {{categorie.name}}
+            </div>
+            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-1" style="color:#A9A9A9">
+              <span class="glyphicon glyphicon-edit"></span>
+            </div>
+            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-2" style="color: #CD5C5C">
+              <span class="glyphicon glyphicon-remove"></span>
+            </div>
+          </legend>
+          <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+        </div>
+      {% endfor %}<br>
+      <a href="{{ path('new_category') }}">
+        <button type="button" class="btn btn-default">Nouvelle catégorie</button>
+      </a><br><br>
+      <a href="{{ path('home') }}">
+        <button type="button">Retour à la liste des notes</button>
+      </a>
+    </div>
+  </body>
+</html>
