@@ -3,6 +3,7 @@ namespace RecipeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use RecipeBundle\Entity\Categorie;
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Note
  *
@@ -119,7 +120,7 @@ class Note
     {
         return $this->date;
     }
-    
+
     /**
      * Set categorie
      *
@@ -142,4 +143,23 @@ class Note
     {
         return $this->categorie;
     }
+
+  /**
+   * @Assert\IsTrue(message = "Xml non valide")
+   */
+  public function isValid(){
+    //. pour concatener
+    $contentxml = "<content>".$this->content."</content>";
+    //var_dump($contentxml);
+    //die();
+    try {
+      $dom = new \DOMDocument();
+      $dom->loadXML($contentxml);
+      $dom->schemaValidate("xmlschema.xsd");
+    }
+    catch( \ErrorException $e) {
+      return false;
+    }
+    return true;
+  }
 }

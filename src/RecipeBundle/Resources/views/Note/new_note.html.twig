@@ -12,13 +12,18 @@
       <div class="container">
 
         <h1>Nouvelle note</h1>
+        <a id="tag"class="btn btn-default" style="cursor: pointer;">
+          <span class="glyphicon glyphicon-tag"></span> Ajouter un tag
+        </a><br><br>
         <div>
             {{ form(form) }}
         </div>
-        <a href="{{ path('home') }}">
+        <a class="btn btn-default" href="{{ path('home') }}">
           <span class="glyphicon glyphicon-arrow-left"></span>
           retour notes
         </a>
+        <script src="{{ asset('bootstrap/js/jquery-3.1.1.js') }}"></script>
+        <script src="{{ asset('bootstrap/js/tag.js') }}"></script>
       </div>
     </body>
 </html>

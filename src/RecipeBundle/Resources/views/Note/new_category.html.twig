@@ -9,10 +9,14 @@
     </head>
     <body>
       <div class="container">
-        <h1>Nouvelle note</h1>
+        <h1>Nouvelle catégorie</h1>
         <div>
             {{ form(form) }}
         </div>
+        <a href="{{ path('check_categories') }}">
+          <span class="glyphicon glyphicon-arrow-left"></span>
+          retour catégories
+        </a>
       </div>
     </body>
 </html>
