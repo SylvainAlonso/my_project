@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use RecipeBundle\Entity\Note;
@@ -21,53 +22,59 @@ class DefaultController extends Controller
      * @Route("/", name="home")
      */
     public function ShowNotes(Request $request){
-      //Form builder for the tag research, sent to the twig
-      $data = array();
-      $form = $this->createFormBuilder($data)
-        ->add('tag', TextType::class, array('required'=>true))
-        ->add('submit', SubmitType::class,
-          array('label' => 'Rechercher un tag'))
-        ->getForm();
+      //Form allowing tags to be searched
+      $form = $this->createFormBuilder()
+              ->add('search_tag', SearchType::class, array(
+              'label'=> false,
+              'required'=>true,
+              'attr' => array(
+                    'placeholder'=>'Rechercher un tag')))
+              ->getForm();
+      //Retrieving database elements
       $form->handleRequest($request);
-      //Try a Db request with error handling
       try {
         $em = $this->getDoctrine()->getManager();
-        $product = $em->getRepository('RecipeBundle:Note')->findAll();
+        $notes = $em->getRepository('RecipeBundle:Note')->findAll();
       }
       catch (\Doctrine\DBAL\DBALException $e) {
-        $this->addFlash('bad', 'Erreur de connection a la DB');
+        $this->addFlash('failure', 'Erreur de connection à la DB');
         return $this->redirect($this->generateUrl('home'));
       }
-      //only show notes with the tag we're looking for
+      //Searching corresponding notes
       if ($form->isValid()) {
-        $tag = $form->getData()['tag'];
-        $filtered_notes = array();
-        foreach ($product as $note) {
+        $search = $form->getData()['search_tag'];
+        $corresponding_notes = array();
+        foreach ($notes as $note) {
+          $contentxml = "<content>".$note->getContent()."</content>";
           $xml = new \DOMDocument();
-          $xml->loadXML('<content>'.$note->getContent().'</content>');
+          $xml->loadXML($contentxml);
           $xpath = new \DOMXPath($xml);
-          $elements = $xpath->query('//tag');
-          foreach ($elements as $element) {
-            if ($element->textContent == $tag) {
-              $filtered_notes[] = $note;
+          $tags = $xpath->query('//tag');
+          $match=false;
+          foreach ($tags as $tag) {
+            if ($tag->textContent == $search) {
+              $match= true;
+              $corresponding_notes[] = $note;
               break;
             }
           }
         }
-        //If no note found with that tag, show an error message
-        if (sizeof($filtered_notes) > 0) {
-          $product = $filtered_notes;
+        //If there is (are) corresponding note(s)
+        if ($match==true) {
+          $notes = $corresponding_notes;
         }
         else {
-          $this->addFlash('bad', 'Aucune note correspondant à ce tag');
+          $this->addFlash('failure', 'Aucune note correspondante');
         }
       }
-      return $this->render('RecipeBundle:Note:index.html.twig', array('notes'=> $product, 'form' => $form->createView()));
+      return $this->render('RecipeBundle:Note:index.html.twig', array('notes'=> $notes, 'form' => $form->createView()));
     }
+
     /**
      * @Route("/new_note", name="new_note")
      */
      public function NewNote(Request $request){
+       //Creation of a new note object and calling the edit function
        $note= new Note();
        return $this->EditNote($request, $note);
      }
@@ -75,12 +82,13 @@ class DefaultController extends Controller
     /**
      * @Route("/delete_note/{id}", name="delete_note")
      */
-    public function DeleteNote(note $note)
+    public function DeleteNote(Request $request, $id)
     {
       $em = $this->getDoctrine()->getManager();
-      $del = $em->getRepository('RecipeBundle:Note')->find($note);
+      //Searching for the note corresponding to id and remove it
+      $note = $em->getRepository('RecipeBundle:Note')->find($id);
       try {
-        $em->remove($del);
+        $em->remove($note);
         $em->flush();
       }
       catch (\Doctrine\DBAL\DBALException $e) {
@@ -97,19 +105,19 @@ class DefaultController extends Controller
     public function EditNote(Request $request,note $note){
       try {
         $em = $this->getDoctrine()->getManager();
-        $product = $em->getRepository('RecipeBundle:Categorie')->findAll();
+        $categories = $em->getRepository('RecipeBundle:Categorie')->findAll();
       }
       catch (\Doctrine\DBAL\DBALException $e) {
-        $this->addFlash('bad', 'Erreur de connection a la DB');
+        $this->addFlash('failure', 'Erreur de connection a la DB');
         return $this->redirect($this->generateUrl('home'));
       }
-
+      //Form allowing to create/edit a note (send to the twig)
       $form = $this->createFormBuilder($note)
         ->add('title', TextType::class, array('label' => 'Titre'))
         ->add('content', TextareaType::class, array('label' => 'Contenu'))
         ->add('date', DateType::class, array('label' =>'Date'))
         ->add('categorie', ChoiceType::class, array('label'=>"Catégorie",
-            'choices'=>$product,
+            'choices'=>$categories,
             'choice_label' => function($cat, $key, $index){
               return $cat->getName();
         }))
@@ -141,14 +149,15 @@ class DefaultController extends Controller
     public function CheckCategories(Request $request){
       try {
         $em = $this->getDoctrine()->getManager();
-        $product = $em->getRepository('RecipeBundle:Categorie')->findAll();
+        //Check all categories
+        $categories = $em->getRepository('RecipeBundle:Categorie')->findAll();
       }
       catch (\Doctrine\DBAL\DBALException $e) {
         $this->addFlash('bad', 'Erreur de connection a la DB');
         return $this->redirect($this->generateUrl('home'));
       }
 
-      return $this->render('RecipeBundle:Note:categories.html.twig', array('categories'=> $product));
+      return $this->render('RecipeBundle:Note:categories.html.twig', array('categories'=> $categories));
     }
 
     /**
@@ -163,11 +172,11 @@ class DefaultController extends Controller
     /**
      * @Route("/delete_category/{id}", name="delete_category")
      */
-     public function deleteCategorie(categorie $category) {
+     public function deleteCategorie($id) {
        $em = $this->getDoctrine()->getManager();
-       $del = $em->getRepository('RecipeBundle:Categorie')->find($category);
+       $category = $em->getRepository('RecipeBundle:Categorie')->find($id);
        try {
-         $em->remove($del);
+         $em->remove($category);
          $em->flush();
        }
        catch (\Doctrine\DBAL\DBALException $e) {
