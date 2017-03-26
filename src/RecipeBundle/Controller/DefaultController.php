@@ -60,7 +60,7 @@ class DefaultController extends Controller
           }
         }
         //If there is (are) corresponding note(s)
-        if ($match==true) {
+        if ($match=true) {
           $notes = $corresponding_notes;
         }
         else {
