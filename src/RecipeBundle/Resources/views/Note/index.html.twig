@@ -18,7 +18,7 @@
     <body>
       <div class="container">
       <h2>Liste des notes</h2>
-      
+
       <a href="{{ path('new_note') }}">
         <button type="button" class="btn btn-default">Nouvelle note</button>
       </a>
@@ -36,10 +36,12 @@
             {{note.content}}<br><br>
           </div>
           <a href="{{ path('edit_note', {'id':note.id}) }}">
-            <span class="glyphicon glyphicon-edit" style="font-size:15px;color:#4682B4;"></span>
+            <span class="glyphicon glyphicon-edit"
+             style="font-size:15px;color:#4682B4;"></span>
           </a>
           <a href="{{ path('delete_note', {'id':note.id}) }}">
-            <span class="glyphicon glyphicon-remove" style="font-size:15px;color: #CD5C5C;"></span>
+            <span class="glyphicon glyphicon-remove"
+             style="font-size:15px;color: #CD5C5C;"></span>
           </a>
         </div>
       {% endfor %}

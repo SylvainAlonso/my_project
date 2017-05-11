@@ -67,7 +67,8 @@ class DefaultController extends Controller
           $this->addFlash('failure', 'Aucune note correspondante');
         }
       }
-      return $this->render('RecipeBundle:Note:index.html.twig', array('notes'=> $notes, 'form' => $form->createView()));
+      return $this->render('RecipeBundle:Note:index.html.twig', array('notes'=>
+                           $notes, 'form' => $form->createView()));
     }
 
     /**
@@ -140,7 +141,8 @@ class DefaultController extends Controller
         $this->addflash('success', 'La note a bien été enregistrée.');
         return $this->redirect($this->generateUrl('home'));
       }
-      return $this->render('RecipeBundle:Note:new_note.html.twig',array('form'=>$form->createView()));
+      return $this->render('RecipeBundle:Note:new_note.html.twig',array('form'
+                           =>$form->createView()));
     }
 
     /**
@@ -157,7 +159,8 @@ class DefaultController extends Controller
         return $this->redirect($this->generateUrl('home'));
       }
 
-      return $this->render('RecipeBundle:Note:categories.html.twig', array('categories'=> $categories));
+      return $this->render('RecipeBundle:Note:categories.html.twig',
+                           array('categories'=> $categories));
     }
 
     /**
@@ -211,7 +214,8 @@ class DefaultController extends Controller
          $this->addflash('success', 'La catégorie a bien été enregistrée.');
          return $this->redirect($this->generateUrl('home'));
        }
-       return $this->render('RecipeBundle:Note:new_category.html.twig',array('form'=>$form->createView()));
+       return $this->render('RecipeBundle:Note:new_category.html.twig',
+                            array('form'=>$form->createView()));
      }
 
 }

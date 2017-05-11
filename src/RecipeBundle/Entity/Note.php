@@ -2,8 +2,10 @@
 namespace RecipeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use RecipeBundle\Entity\Categorie;
+//use RecipeBundle\Entity\Categorie;
 use Symfony\Component\Validator\Constraints as Assert;
+
+
 /**
  * Note
  *
@@ -46,6 +48,11 @@ class Note
      * @ORM\JoinColumn(name="Categorie_id", referencedColumnName="id")
      */
     private $categorie;
+
+    //auto completing date time with actual date time value
+     public function __construct() {
+         $this->date = new \DateTime();
+     }
 
     /**
      * Get id

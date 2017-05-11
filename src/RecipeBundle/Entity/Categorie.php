@@ -3,7 +3,8 @@
 namespace RecipeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use RecipeBundle\Entity\Note;
+
+//use RecipeBundle\Entity\Note;
 
 /**
  * Categorie
@@ -25,7 +26,7 @@ class Categorie
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255, unique=true)
      */
     private $name;
 
@@ -67,39 +68,5 @@ class Categorie
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Add note
-     *
-     * @param \RecipeBundle\Entity\Note $note
-     *
-     * @return Categorie
-     */
-    public function addNote(\RecipeBundle\Entity\Note $note)
-    {
-        $this->note[] = $note;
-
-        return $this;
-    }
-
-    /**
-     * Remove note
-     *
-     * @param \RecipeBundle\Entity\Note $note
-     */
-    public function removeNote(\RecipeBundle\Entity\Note $note)
-    {
-        $this->note->removeElement($note);
-    }
-
-    /**
-     * Get note
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getNote()
-    {
-        return $this->note;
     }
 }
